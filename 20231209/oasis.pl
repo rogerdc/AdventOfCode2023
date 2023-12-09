@@ -52,6 +52,7 @@ sub get_next_value
     {
         push @{$new_sequence}, $current_sequence->[$i] - $current_sequence->[$i - 1];
     }
+    $::iteration_count++;
     return ($current_sequence->[$#{$current_sequence}] + get_next_value($new_sequence));
 }
 
@@ -95,18 +96,24 @@ sub get_previous_value
     }
     # print "New sequence completed.\n";
     # print Dumper($new_sequence);
+    $::iteration_count++;
     return ($current_sequence->[0] - get_previous_value($new_sequence));
 }
 
 
 my $sum_of_next_values = 0;
 my $sum_of_previous_values = 0;
+our $iteration_count = 0;
 
 foreach my $sequence (@sequences)
 {
     my $next_value = get_next_value $sequence;
+    my $next_iterations = $iteration_count;
+    $iteration_count = 0;
     my $previous_value = get_previous_value $sequence;
-    print "Next value of this sequence is: $next_value, previous value of this sequence is: $previous_value\n";
+    my $previous_iterations = $iteration_count;
+    $iteration_count = 0;
+    print "Next value of this sequence is: $next_value ($next_iterations iterations), previous value of this sequence is: $previous_value ($previous_iterations iterations)\n";
     $sum_of_next_values += $next_value;
     $sum_of_previous_values += $previous_value;
 }
